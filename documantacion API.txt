@@ -1,0 +1,101 @@
+Documentación de la API de Vulnerabilidades
+
+Descripción
+
+Esta API permite consultar vulnerabilidades de la base de datos del NIST, registrar vulnerabilidades que han sido corregidas y obtener un resumen de severidad.
+
+Tecnologías utilizadas
+
+Python
+
+Django Rest Framework
+
+SQLite (o PostgreSQL en producción)
+
+Docker
+
+Instalación y ejecución local
+
+1. Clonar el repositorio
+
+    git clone <URL_DEL_REPOSITORIO>
+    cd crm_api
+
+2. Crear y activar un entorno virtual
+
+    python -m venv venv
+    source venv/bin/activate  # En Linux o Mac
+    venv\Scripts\activate    # En Windows
+
+3. Instalar dependencias
+
+    pip install -r requirements.txt
+
+4. Aplicar migraciones y ejecutar el servidor
+
+    python manage.py migrate
+    python manage.py runserver
+
+Uso de la API
+
+1. Listar todas las vulnerabilidades del NIST
+
+GET /api/vulnerabilities/
+
+Devuelve todas las vulnerabilidades obtenidas desde el NIST.
+
+Ejemplo de respuesta:
+
+{
+    "vulnerabilities": [
+        {
+            "id": "CVE-2024-12345",
+            "description": "Falla en la autenticación de XYZ",
+            "severity": "high"
+        }
+    ]
+}
+
+2. Registrar vulnerabilidades corregidas
+
+POST /api/fixed-vulnerabilities/
+
+Recibe un listado de vulnerabilidades fixeadas y las almacena en la base de datos.
+
+Ejemplo de solicitud:
+
+{
+    "fixed_vulnerabilities": ["CVE-2024-12345", "CVE-2024-67890"]
+}
+
+3. Obtener vulnerabilidades excluyendo las fixeadas
+
+GET /api/vulnerabilities/filtered/
+
+Devuelve la lista de vulnerabilidades activas, excluyendo las corregidas.
+
+4. Resumen de vulnerabilidades por severidad
+
+GET /api/vulnerabilities/summary/
+
+Devuelve el número de vulnerabilidades agrupadas por severidad.
+
+Ejemplo de respuesta:
+
+{
+    "high": 10,
+    "medium": 5,
+    "low": 3
+}
+
+Ejecución con Docker
+
+1. Construir la imagen de Docker
+
+    docker build -t mi_api_django .
+
+2. Ejecutar el contenedor
+
+    docker run -p 8000:8000 mi_api_django
+
+La API estará disponible en http://localhost:8000/api/
